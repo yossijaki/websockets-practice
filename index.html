@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WebSocket Practice</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
+        <script src="jquery-3.7.1.min.js"></script>
+        <script type="text/javascript">
+            var ws;
+            function StartConnection() {
+                ws = new WebSocket("ws://achex.ca:4010");
+
+                ws.onopen = function() {
+                    ws.send('{"setID":"MichatRoom","passwd":"12345"}');
+                }
+
+                ws.onmessage = function(Mensajes) {
+                    var ObtainedMessages = Mensajes.data;
+                    var objeto = jQuery.parseJSON(ObtainedMessages);
+                    alert("Mensajes obtenidos: " + objeto.NombreU);
+                    alert("Mensajes obtenidos: " + objeto.ContenidoM);
+                }
+
+                ws.onclose = function() {
+                    alert("Conexion cerrada");
+                }
+            }
+            StartConnection();
+        </script>
+    </head>
+    <body>
+        <div>
+            <input type="button" value="Iniciar conexion WebSocket"/>
+            <input type="text" placeholder="Escribe tu mensaje aqui" id="Mensaje"/>
+            <input type="button" id="btnSend" value="Enviar Mensaje"/>
+        </div>
+        <script>
+            var Nombre = prompt("Nombre:");
+            $('#btnSend').click(function() {
+                ws.send('{"to":"MichatRoom"."NombreU":"'+Nombre+'","ContenidoM":"'+$('#Mensaje').val()+'"}')
+            })
+        </script>
+    </body>
+</html>
